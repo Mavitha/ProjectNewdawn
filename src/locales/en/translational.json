@@ -1,0 +1,13 @@
+{
+  "welcome": "Welcome",
+  "toggleTheme": "Toggle Theme",
+  "signin": "Sign In",
+  "community": "Community",
+  "serviceMarketplace": "Service Marketplace",
+  "communityWelcome": "Welcome to the community",
+  "JoinAsAClientOrProfessional": "Join as a client or professional",
+  "language": {
+    "english": "English",
+    "sinhala": "සිංහල"
+  }
+}

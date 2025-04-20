@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn{
+  border-radius: 25px;
+ 
+
+}
+
+.input{
+  border-radius: 25px;
+}
