@@ -41,7 +41,7 @@ const DataFormForFindingProvider = () => {
 
   const renderStep = () => {
     switch(currentStep) {
-      case 1:
+      case 1: {/* Step 1: User Type Selection whether a client or a provider */}
         return (
           <div className="w-full max-w-4xl">
             <h2 className="text-2xl font-bold mb-6 text-center">
@@ -79,7 +79,7 @@ const DataFormForFindingProvider = () => {
           </div>
         );
 
-      case 2:
+      case 2: {/* Asking if he wants a provider from the region or from the whole country */}
         return (
           <div className="w-full max-w-4xl">
             <h2 className="text-2xl font-bold mb-6 text-center">
@@ -113,7 +113,7 @@ const DataFormForFindingProvider = () => {
           </div>
         );
 
-      case 2.5:
+      case 2.5: {/* User city selecting */}
         return (
           <div className="w-full max-w-4xl">
             <h2 className="text-2xl font-bold mb-6 text-center">
@@ -145,7 +145,7 @@ const DataFormForFindingProvider = () => {
           </div>
         );
 
-      case 3:
+      case 3: {/* Asking whether he wants to post a job or search a provider */}
         return (
           <div className="w-full max-w-4xl">
             <h2 className="text-2xl font-bold mb-6 text-center">
@@ -172,7 +172,7 @@ const DataFormForFindingProvider = () => {
           </div>
         );
 
-      case 4:
+      case 4:{/* Chosing the service he needs */}
         return (
           <div className="w-full max-w-4xl">
             <h2 className="text-2xl font-bold mb-6 text-center">
@@ -220,7 +220,7 @@ const DataFormForFindingProvider = () => {
           </div>
         );
 
-        case 5:
+        case 5:{/* Best matches - still not developed the search index or anything related to this */}
           return (
           <div className="min-h-screen bg-base-100">
             <div className="flex flex-col md:flex-row gap-6 p-6">
@@ -288,7 +288,7 @@ const DataFormForFindingProvider = () => {
           </div>
           );
 
-          case 6:
+          case 6:{/* Profile */}
           return (
             <div className="min-h-screen bg-base-100 p-6">
               <div className="max-w-4xl mx-auto">

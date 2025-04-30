@@ -1,3 +1,5 @@
+// {Lanuge toggle component for switching between English and Sinhala}
+
 import  { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 

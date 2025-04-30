@@ -14,8 +14,10 @@ function App() {
 
   return (
     <>
-      <LanguageToggle />
-      <Navbar onTabChange={setSelectedTab} /> 
+      <LanguageToggle /> {/*Language Switcher - used i18n
+                          edit from locales/en or si/translational.json*/}
+
+      <Navbar onTabChange={setSelectedTab} />  {/*send argument to change tabs*/}
       {selectedTab === 'community' && <Community />}
       {selectedTab === 'marketplace' && <ServiceMarketplace />}
       

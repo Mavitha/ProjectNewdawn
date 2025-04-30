@@ -5,6 +5,7 @@ function Community() {
 
   return (
     <>
+    {/* Still not started any development in this tab */}
       <h1 className='flex justify-center items-center'> {t('communityWelcome')} </h1>
     </>
   );
