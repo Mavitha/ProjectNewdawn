@@ -15,17 +15,42 @@ const DataFormForFindingProvider = () => {
   });
 
   const [cities, setCities] = useState([]);
+  const [locationData, setLocationData] = useState(null); // debug: full API response
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     // Fetch user's location
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const { latitude, longitude } = position.coords;
-      // Fetch cities based on user's location
-      const response = await fetch(`https://api.example.com/cities?lat=${latitude}&lon=${longitude}`);
-      const data = await response.json();
-      setCities(data.cities);
-    });
+    if (!('geolocation' in navigator)) {
+      setLocationData({ error: 'Geolocation not supported' });
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          // Reverse geocode based on user's location (LocationIQ)
+          const response = await fetch(
+            `https://us1.locationiq.com/v1/reverse?key=pk.d9de3bfc02b6350e06a78881f0199e73&lat=${latitude}&lon=${longitude}&format=json`
+          );
+          const data = await response.json();
+          setLocationData(data);
+          // Derive a single city-like value for UI (reverse API doesn't return a cities array)
+          const city =
+            data?.address?.town ||
+            data?.address?.state_district ||
+            data?.address?.state ||
+            data?.address?.country ||
+            null;
+          setCities(city ? [city] : []);
+        } catch (e) {
+          setLocationData({ error: String(e?.message || e) });
+        }
+      },
+      (err) => {
+        setLocationData({ error: err?.message || 'Geolocation failed' });
+      },
+      { enableHighAccuracy: false, timeout: 10000, maximumAge: 300000 }
+    );
   }, []);
 
   const serviceCategories = {
@@ -62,7 +87,7 @@ const DataFormForFindingProvider = () => {
                           if (type === 'client') {
                             handleNext();
                           } else {
-                            setCurrentStep(3);
+                            setCurrentStep(2);
                           }
                         }}
                       />
@@ -79,73 +104,73 @@ const DataFormForFindingProvider = () => {
           </div>
         );
 
-      case 2: {/* Asking if he wants a provider from the region or from the whole country */}
-        return (
-          <div className="w-full max-w-4xl">
-            <h2 className="text-2xl font-bold mb-6 text-center">
-              Select the region where you need service
-            </h2>
-            <div className="flex flex-col gap-4">
-              {['Northwide', 'Local Region'].map(region => (
-                <label key={region} className="card bg-base-100 shadow-xl cursor-pointer hover:scale-105 transition-transform">
-                  <div className="card-body">
-                    <div className="flex items-center gap-4">
-                      <input
-                        type="radio"
-                        name="region"
-                        className="radio"
-                        checked={formData.region === region}
-                        onChange={() => {
-                          setFormData({...formData, region});
-                          if (region === 'Northwide') {
-                            handleNext();
-                          } else {
-                            setCurrentStep(2.5);
-                          }
-                        }}
-                      />
-                      <h3 className="card-title">{region}</h3>
-                    </div>
-                  </div>
-                </label>
-              ))}
-            </div>
-          </div>
-        );
+      // case 2: {/* Asking if he wants a provider from the region or from the whole country */}
+      //   return (
+      //     <div className="w-full max-w-4xl">
+      //       <h2 className="text-2xl font-bold mb-6 text-center">
+      //         Select the region where you need service
+      //       </h2>
+      //       <div className="flex flex-col gap-4">
+      //         {['Northwide', 'Local Region'].map(region => (
+      //           <label key={region} className="card bg-base-100 shadow-xl cursor-pointer hover:scale-105 transition-transform">
+      //             <div className="card-body">
+      //               <div className="flex items-center gap-4">
+      //                 <input
+      //                   type="radio"
+      //                   name="region"
+      //                   className="radio"
+      //                   checked={formData.region === region}
+      //                   onChange={() => {
+      //                     setFormData({...formData, region});
+      //                     if (region === 'Northwide') {
+      //                       handleNext();
+      //                     } else {
+      //                       setCurrentStep(2.5);
+      //                     }
+      //                   }}
+      //                 />
+      //                 <h3 className="card-title">{region}</h3>
+      //               </div>
+      //             </div>
+      //           </label>
+      //         ))}
+      //       </div>
+      //     </div>
+      //   );
 
-      case 2.5: {/* User city selecting */}
-        return (
-          <div className="w-full max-w-4xl">
-            <h2 className="text-2xl font-bold mb-6 text-center">
-              Select your city
-            </h2>
-            <div className="form-control">
-              <div className="dropdown w-full">
-                <input
-                  type="text"
-                  placeholder="Search cities..."
-                  className="input input-bordered w-full"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
-                  {cities.filter(city => 
-                    city.toLowerCase().includes(searchTerm.toLowerCase())
-                  ).map(city => (
-                    <li key={city} onClick={() => {
-                      setFormData({...formData, city});
-                      handleNextHalf();
-                    }}>
-                      <a>{city}</a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        );
+      // case 2.5: {/* User city selecting */}
+      //   return (
+      //     <div className="w-full max-w-4xl">
+      //       <h2 className="text-2xl font-bold mb-6 text-center">
+      //         Select your city
+      //       </h2>
+      //       <div className="form-control">
+      //         <div className="dropdown w-full">
+      //           <input
+      //             type="text"
+      //             placeholder="Search cities..."
+      //             className="input input-bordered w-full"
+      //             value={searchTerm}
+      //             onChange={(e) => setSearchTerm(e.target.value)}
+      //           />
+      //           <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-full">
+      //             {cities.filter(city => 
+      //               city.toLowerCase().includes(searchTerm.toLowerCase())
+      //             ).map(city => (
+      //               <li key={city} onClick={() => {
+      //                 setFormData({...formData, city});
+      //                 handleNextHalf();
+      //               }}>
+      //                 <a>{city}</a>
+      //               </li>
+      //             ))}
+      //           </ul>
+      //         </div>
+      //       </div>
+      //     </div>
+      //   );
 
-      case 3: {/* Asking whether he wants to post a job or search a provider */}
+      case 2: {/* Asking whether he wants to post a job or search a provider */}
         return (
           <div className="w-full max-w-4xl">
             <h2 className="text-2xl font-bold mb-6 text-center">
@@ -172,7 +197,7 @@ const DataFormForFindingProvider = () => {
           </div>
         );
 
-      case 4:{/* Chosing the service he needs */}
+      case 3:{/* Chosing the service he needs */}
         return (
           <div className="w-full max-w-4xl">
             <h2 className="text-2xl font-bold mb-6 text-center">
@@ -210,7 +235,11 @@ const DataFormForFindingProvider = () => {
                   className="btn btn-outline btn-sm rounded-full"
                   onClick={() => {
                     setFormData({...formData, subCategory: sub});
-                    handleNext();
+                    if ( formData.purpose === 'find') {
+                            handleNext();
+                          } else {
+                            setCurrentStep(5);
+                          }
                   }}
                 >
                   {sub}
@@ -220,7 +249,7 @@ const DataFormForFindingProvider = () => {
           </div>
         );
 
-        case 5:{/* Best matches - still not developed the search index or anything related to this */}
+        case 4:{/* Best matches - still not developed the search index or anything related to this */}
           return (
           <div className="min-h-screen bg-base-100">
             <div className="flex flex-col md:flex-row gap-6 p-6">
@@ -288,7 +317,7 @@ const DataFormForFindingProvider = () => {
           </div>
           );
 
-          case 6:{/* Profile */}
+          case 5:{/* Profile */}
           return (
             <div className="min-h-screen bg-base-100 p-6">
               <div className="max-w-4xl mx-auto">
@@ -378,14 +407,19 @@ const DataFormForFindingProvider = () => {
   };
 
   return (
-    <div className="flex justify-center p-6">
-      {renderStep()}
-      {currentStep > 1 && (
-        <button className="btn btn-outline absolute bottom-4 left-4" onClick={handleBack}>
-          Back
-        </button>
-      )}
-    </div>
+    <>
+      <div className="flex justify-center p-6">
+        {renderStep()}
+        {currentStep > 1 && (
+          <button className="btn btn-outline absolute bottom-4 left-4" onClick={handleBack}>
+            Back
+          </button>
+        )}
+      </div>
+      <pre className="text-xs whitespace-pre-wrap break-words bg-base-200 p-3 rounded">
+        {JSON.stringify(cities, null, 2)}
+      </pre>
+    </>
   );
 };
 
