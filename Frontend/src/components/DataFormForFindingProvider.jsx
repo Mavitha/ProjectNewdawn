@@ -7,14 +7,12 @@ const DataFormForFindingProvider = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     userType: '',
-    region: '',
     city: '',
     purpose: '',
     serviceCategory: '',
     subCategory: ''
   });
 
-  const [cities, setCities] = useState([]);
   const [locationData, setLocationData] = useState(null); // debug: full API response
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -41,7 +39,8 @@ const DataFormForFindingProvider = () => {
             data?.address?.state ||
             data?.address?.country ||
             null;
-          setCities(city ? [city] : []);
+          formData.city = city;
+          console.log('Detected city:', city);
         } catch (e) {
           setLocationData({ error: String(e?.message || e) });
         }
@@ -416,9 +415,7 @@ const DataFormForFindingProvider = () => {
           </button>
         )}
       </div>
-      <pre className="text-xs whitespace-pre-wrap break-words bg-base-200 p-3 rounded">
-        {JSON.stringify(cities, null, 2)}
-      </pre>
+      
     </>
   );
 };
