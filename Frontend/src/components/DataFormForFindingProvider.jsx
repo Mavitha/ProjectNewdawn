@@ -40,7 +40,6 @@ const DataFormForFindingProvider = () => {
             data?.address?.country ||
             null;
           formData.city = city;
-          console.log('Detected city:', city);
         } catch (e) {
           setLocationData({ error: String(e?.message || e) });
         }
