@@ -1,29 +1,30 @@
+import { Routes, Route } from 'react-router-dom';
+
 
 import LanguageToggle from './components/LanguageToggle.jsx';
 import Navbar from './components/Navbar.jsx';
 import DataFormForFindingProvider from './components/DataFormForFindingProvider.jsx';
 import { useState } from 'react';
 import Themetoggle from './components/Themetoggle.jsx';
+import LoginPage from './components/LoginPage.jsx';
 
 
 function App() {
-
-  const [selectedTab, setSelectedTab] = useState('community');
-  
- 
+  const [page, setPage] = useState('home'); // 'home' | 'login'
 
   return (
     <>
       <div className="flex justify-end items-center gap-2 pt-4 pr-4">
-        <LanguageToggle /> {/*Language Switcher - used i18n
-                          edit from locales/en or si/translational.json*/}
+        <LanguageToggle />
         <Themetoggle/>
       </div>
-      
-      <Navbar/>  {/*send argument to change tabs*/}
 
-      <DataFormForFindingProvider /> {/*Form to find a service provider or to register as a service provider - refer to the design in figma to get the algo*/}
-      
+      <Navbar onSignIn={() => setPage('login')} />
+
+      <Routes>
+        <Route path="/" element={<DataFormForFindingProvider />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
     </>
   );
 }

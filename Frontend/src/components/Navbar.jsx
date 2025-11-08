@@ -1,22 +1,22 @@
 import BrandLogo from '../assets/img/BrandLogo.avif'
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
-function Navbar() {
+function Navbar({ onSignIn }) {
   const { t } = useTranslation();
 
   return (
     <nav className="navbar sm:px-10 p-4">
       {/* Start: Logo */}
       <div className="navbar-start">
-        <a href="#" className="inline-flex items-center">
+        <Link to="/" className="inline-flex items-center">
           <img src={BrandLogo} alt="Brand logo" className="rounded-badge w-14 sm:w-20" />
-        </a>
+        </Link>
       </div>
 
       {/* End: Sign in button (visible on all breakpoints) */}
       <div className="navbar-end">
-        <button className="btn btn-sm sm:btn-md">
-          {/* User icon shown on lg+ */}
+        <Link className="btn btn-sm sm:btn-md" to="/login">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -33,7 +33,7 @@ function Navbar() {
             />
           </svg>
           <span>{t('signin')}</span>
-        </button>
+        </Link>
       </div>
     </nav>
   );

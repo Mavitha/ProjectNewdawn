@@ -28,7 +28,7 @@ const DataFormForFindingProvider = () => {
           const { latitude, longitude } = position.coords;
           // Reverse geocode based on user's location (LocationIQ)
           const response = await fetch(
-            `https://us1.locationiq.com/v1/reverse?key=pk.d9de3bfc02b6350e06a78881f0199e73&lat=${latitude}&lon=${longitude}&format=json`
+            `https://us1.locationiq.com/v1/reverse?key=&lat=${latitude}&lon=${longitude}&format=json`
           );
           const data = await response.json();
           setLocationData(data);
@@ -65,6 +65,7 @@ const DataFormForFindingProvider = () => {
   const renderStep = () => {
     switch(currentStep) {
       case 1: {/* Step 1: User Type Selection whether a client or a provider */}
+      
         return (
           <div className="w-full max-w-4xl">
             <h2 className="text-2xl font-bold mb-6 text-center">
