@@ -54,7 +54,7 @@ Finding reliable service providers is often time-consuming and uncertain. Custom
 ---
 
 ## 📈 Development Status
-🚧 **Ongoing Project**
+🚧 **Current Focus**
 
 - Core structure implemented  
 - Frontend and backend separated for scalability  
